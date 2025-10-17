@@ -1,8 +1,8 @@
 import React from 'react';
-import { Avatar, Badge, Sidebar } from 'flowbite-react';
+import { Avatar, Badge } from 'flowbite-react';
 import { HiUsers, HiLogout } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
-import { User } from '../types';
+import { User } from '@/types/tipos';
 
 interface ChatLayoutProps {
   currentUserName: string;

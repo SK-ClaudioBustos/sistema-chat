@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Label, TextInput, Card } from 'flowbite-react';
+import { Button, Card, Label, TextInput } from "flowbite-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
-  const [userName, setUserName] = useState('');
-  const [error, setError] = useState('');
+  const [userName, setUserName] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const validateUsername = (name: string): boolean => {
@@ -15,34 +15,34 @@ const LoginPage: React.FC = () => {
 
   const sanitizeUsername = (name: string): string => {
     // Convert to lowercase and replace spaces with underscores
-    return name.toLowerCase().replace(/\s+/g, '_');
+    return name.toLowerCase().replace(/\s+/g, "_");
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setUserName(value);
-    
+
     if (value && !validateUsername(value)) {
-      setError('Only letters and spaces are allowed');
+      setError("Only letters and spaces are allowed");
     } else {
-      setError('');
+      setError("");
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = userName.trim();
-    
+
     if (!trimmedName) {
-      setError('Please enter your name');
+      setError("Please enter your name");
       return;
     }
-    
+
     if (!validateUsername(trimmedName)) {
-      setError('Only letters and spaces are allowed');
+      setError("Only letters and spaces are allowed");
       return;
     }
-    
+
     const sanitizedName = sanitizeUsername(trimmedName);
     navigate(`/chat/${sanitizedName}`);
   };
@@ -56,7 +56,11 @@ const LoginPage: React.FC = () => {
       </div>
 
       <Card className="w-full max-w-md relative z-10 shadow-2xl border-primary-700/50 bg-white/95 dark:bg-secondary-900/95 backdrop-blur-sm">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6" aria-label="Login form">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-6"
+          aria-label="Login form"
+        >
           {/* Logo/Icon */}
           <div className="flex justify-center mb-2">
             <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-info-500 rounded-2xl flex items-center justify-center shadow-lg">
@@ -85,7 +89,7 @@ const LoginPage: React.FC = () => {
               Enter your name to start chatting
             </p>
           </div>
-          
+
           <div>
             <div className="mb-2 block">
               <Label
@@ -103,7 +107,7 @@ const LoginPage: React.FC = () => {
               onChange={handleInputChange}
               required
               autoFocus
-              color={error ? 'failure' : undefined}
+              color={error ? "failure" : undefined}
               className="focus:ring-primary-500 focus:border-primary-500"
               aria-invalid={!!error}
               aria-describedby={error ? "username-error" : undefined}
@@ -114,14 +118,23 @@ const LoginPage: React.FC = () => {
                 className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-1"
                 role="alert"
               >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 {error}
               </p>
             )}
           </div>
-          
+
           <Button
             type="submit"
             disabled={!userName.trim() || !!error}
@@ -130,8 +143,19 @@ const LoginPage: React.FC = () => {
           >
             <span className="flex items-center gap-2">
               Join Chat
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
               </svg>
             </span>
           </Button>

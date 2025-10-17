@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Avatar, Button, Textarea } from 'flowbite-react';
 import { HiPaperAirplane } from 'react-icons/hi';
-import { User, Message } from '../types';
+import { User, Message } from '@/types/tipos';
 
 interface ChatViewProps {
   selectedUser: User | null;
