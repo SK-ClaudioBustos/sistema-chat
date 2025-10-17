@@ -1,4 +1,4 @@
-import { OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Logger, OnModuleInit } from '@nestjs/common';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
@@ -7,15 +7,25 @@ import { ChatService } from './chat.service';
 export class ChatGateway implements OnModuleInit {
   @WebSocketServer() server: Server;
 
+  private readonly logger = new Logger();
   constructor(private readonly chatService: ChatService) {}
 
   onModuleInit() {
-    this.server.on('connection', (socket: Socket) => {
-      const { username } = socket.handshake.auth;
+    try {
+      this.server.on('connection', (socket: Socket) => {
+        const { username } = socket.handshake.auth;
 
-      socket.on('disconnect', () => {
-        console.log('cliente desconectado');
+        if (!username) {
+          socket.disconnect();
+          throw new BadRequestException('No se envio ningun nombre de usuario');
+        }
+        socket.on('disconnect', () => {
+          this.logger.debug('cliente desconectado');
+        });
       });
-    });
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
   }
 }
