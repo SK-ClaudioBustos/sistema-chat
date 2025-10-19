@@ -1,3 +1,4 @@
+import { UserConnected } from "@/types/tipos";
 import { createContext, useContext } from "react";
 import { Socket } from "socket.io-client";
 
@@ -11,9 +12,11 @@ export interface SocketError {
 }
 
 export interface SocketContextType {
+  userName: string;
   socket: Socket | null;
   isConnected: boolean;
   error: SocketError | null;
+  usersConnected: UserConnected[];
   sendMessage: (event: string, message: any) => void;
   on: (event: string, callback: (data: any) => void) => void;
   off: (event: string, callback?: (data: any) => void) => void;
@@ -21,9 +24,11 @@ export interface SocketContextType {
 }
 
 const initValue: SocketContextType = {
+  userName: '',
   socket: null,
   isConnected: false,
   error: null,
+  usersConnected: [],
   sendMessage: () => {},
   on: () => {},
   off: () => {},

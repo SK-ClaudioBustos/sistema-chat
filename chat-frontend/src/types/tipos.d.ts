@@ -1,7 +1,6 @@
-export interface User {
+export interface UserConnected {
   id: string;
   name: string;
-  online: boolean;
 }
 
 export interface Message {

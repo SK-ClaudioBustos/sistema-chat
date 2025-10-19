@@ -1,3 +1,4 @@
+import { UserConnected } from "@/types/tipos";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import {
@@ -18,6 +19,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<SocketError | null>(null);
+  const [usersConnected, setUsersConnected] = useState<UserConnected[]>([]);
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -31,7 +33,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
         timestamp: new Date(),
       };
       setError(envError);
-      console.error(envError.message);
       return;
     }
 
@@ -52,7 +53,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
 
     // Evento: Conexión exitosa
     newSocket.on("connect", () => {
-      console.log("Socket.IO conectado:", newSocket.id);
       setIsConnected(true);
       setSocket(newSocket);
       setError(null); // Limpiar errores al conectar exitosamente
@@ -60,7 +60,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
 
     // Evento: Desconexión
     newSocket.on("disconnect", (reason) => {
-      console.log("Socket.IO desconectado:", reason);
       setIsConnected(false);
 
       // Solo guardar como error si no fue una desconexión intencional
@@ -77,8 +76,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
 
     // Evento: Error de conexión
     newSocket.on("connect_error", (err) => {
-      console.error("Error de conexión Socket.IO:", err.message);
-
       const connectionError: SocketError = {
         type: "connection",
         message: err.message || "Error de conexión desconocido",
@@ -94,26 +91,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       setError(connectionError);
     });
 
-    // Evento: Error de autenticación (si tu backend lo emite)
-    newSocket.on("auth_error", (err) => {
-      console.error("Error de autenticación:", err);
-
-      const authError: SocketError = {
-        type: "auth",
-        message:
-          typeof err === "string"
-            ? err
-            : err.message || "Error de autenticación",
-        timestamp: new Date(),
-        details: err,
-      };
-      setError(authError);
-    });
-
     // Evento: Error genérico
     newSocket.on("error", (err) => {
-      console.error("Error en Socket.IO:", err);
-
       const genericError: SocketError = {
         type: "generic",
         message:
@@ -122,6 +101,14 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
         details: err,
       };
       setError(genericError);
+    });
+
+    // Evento: Obtener usuarios conectados
+    newSocket.on("on-clients-changed", (data: any) => {
+      const clientsFiltered = (data as UserConnected[]).filter(
+        (client) => client.id !== `id_${userName}`
+      );
+      setUsersConnected([...usersConnected, ...clientsFiltered]);
     });
 
     // Cleanup al desmontar
@@ -144,7 +131,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
           details: err,
         };
         setError(emitError);
-        console.error("Error al enviar mensaje:", err);
       }
     } else {
       const notConnectedError: SocketError = {
@@ -153,7 +139,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
         timestamp: new Date(),
       };
       setError(notConnectedError);
-      console.warn(notConnectedError.message);
     }
   };
 
@@ -176,9 +161,11 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
 
   const value: SocketContextType = useMemo(
     () => ({
+      userName,
       socket,
       isConnected,
       error,
+      usersConnected,
       sendMessage,
       on,
       off,
