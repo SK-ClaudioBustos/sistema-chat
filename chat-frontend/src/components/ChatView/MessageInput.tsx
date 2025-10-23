@@ -3,14 +3,19 @@ import { UserConnected } from "@/types/tipos";
 import { Button, Textarea } from "flowbite-react";
 import { HiPaperAirplane } from "react-icons/hi";
 
+interface MessageInputProps {
+  selectedUser: UserConnected;
+  handleSendMessages: (message: any) => void;
+}
+
 export const MessageInput = ({
   selectedUser,
   handleSendMessages
-}: {
-  selectedUser: UserConnected,
-  handleSendMessages: (message: string) => void
-}) => {
-  const { formRef, handleSubmitMessage } = useSendMessages(selectedUser, handleSendMessages);
+}: MessageInputProps) => {
+  const { formRef, handleSubmitMessage } = useSendMessages(
+    selectedUser,
+    handleSendMessages
+  );
 
   return (
     <div className="border-t border-gray-200 dark:border-gray-700 p-4">
@@ -20,7 +25,7 @@ export const MessageInput = ({
         className="flex gap-2"
       >
         <Textarea
-          placeholder={`Message ${selectedUser.name}...`}
+          placeholder={`Message ${selectedUser.username}...`}
           rows={1}
           name="message"
           className="flex-1"

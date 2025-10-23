@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_BACKEND_URL: string;
+  readonly VITE_WEBSOCKET_URL: string;
   // Agrega aquí otras variables de entorno que uses
   // readonly VITE_OTRA_VARIABLE: string;
 }

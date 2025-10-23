@@ -1,6 +1,6 @@
 export interface UserConnected {
   id: string;
-  name: string;
+  username: string;
 }
 
 export interface Message {

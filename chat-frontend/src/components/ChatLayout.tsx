@@ -1,21 +1,25 @@
-import { useSocket } from "@/context/socket.context";
 import { UserConnected } from "@/types/tipos";
 import { Avatar } from "flowbite-react";
-import React from "react";
+import { FC } from "react";
 import { HiLogout, HiUsers } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 
 interface ChatLayoutProps {
+  userName: string;
   selectedUser: UserConnected | null;
+  isConnected: boolean;
+  usersConnected: UserConnected[];
   onSelectUser: (user: UserConnected) => void;
 }
 
-const ChatLayout: React.FC<ChatLayoutProps> = ({
+const ChatLayout: FC<ChatLayoutProps> = ({
+  userName,
+  isConnected,
   selectedUser,
+  usersConnected,
   onSelectUser,
 }) => {
   const navigate = useNavigate();
-  const { userName, isConnected, usersConnected } = useSocket();
   const handleLogout = () => {
     navigate("/");
   };
@@ -27,7 +31,7 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
             <Avatar
-              placeholderInitials={userName.charAt(0).toUpperCase()}
+              placeholderInitials={userName?.charAt(0).toUpperCase()}
               rounded
               status="online"
               statusPosition="bottom-right"
@@ -60,35 +64,35 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({
 
         {/* usersConnected List */}
         <div className="space-y-1 px-2">
-          {usersConnected.map((user) => (
-            <button
-              key={user.id}
-              onClick={() => onSelectUser(user)}
-              className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                selectedUser?.id === user.id
-                  ? "bg-blue-50 dark:bg-blue-900/20"
-                  : "hover:bg-gray-50 dark:hover:bg-gray-700"
-              }`}
-            >
-              <Avatar
-                placeholderInitials={user.name.charAt(0).toUpperCase()}
-                rounded
-                statusPosition="bottom-right"
-              />
-              <div className="flex-1 text-left">
-                <p className="font-medium text-gray-900 dark:text-white">
-                  {user.name}
-                </p>
-              </div>
-            </button>
-          ))}
+          {usersConnected.length === 0 ? (
+            <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+              No users online
+            </div>
+          ) : (
+            usersConnected.map((user) => (
+              <button
+                key={user.id}
+                onClick={() => onSelectUser(user)}
+                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${
+                  selectedUser?.id === user.id
+                    ? "bg-blue-50 dark:bg-blue-900/20"
+                    : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                }`}
+              >
+                <Avatar
+                  placeholderInitials={user?.username.charAt(0).toUpperCase()}
+                  rounded
+                  statusPosition="bottom-right"
+                />
+                <div className="flex-1 text-left">
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    {user.username}
+                  </p>
+                </div>
+              </button>
+            ))
+          )}
         </div>
-
-        {usersConnected.length === 0 && (
-          <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-            No users online
-          </div>
-        )}
       </div>
     </div>
   );

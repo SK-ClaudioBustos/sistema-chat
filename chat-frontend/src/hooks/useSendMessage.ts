@@ -1,12 +1,11 @@
-import { useSocket } from "@/context/socket.context";
-import { UserConnected } from "@/types/tipos";
+import { generarUUID } from "@/lib/generateUUID";
+import { Message, UserConnected } from "@/types/tipos";
 import { FormEvent, useRef } from "react";
 
 export const useSendMessages = (
   selectedUser: UserConnected,
-  handleSendMessages: (message: string) => void
+  handleSendMessages: (messageData: Message) => void
 ) => {
-  const { userName, sendMessage } = useSocket();
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmitMessage = async (e: FormEvent<HTMLFormElement>) => {
@@ -15,21 +14,18 @@ export const useSendMessages = (
     // Obtengo el mensaje del formulario
     const formData = new FormData(e.currentTarget);
     const message = formData.get("message") as string;
-    const to = selectedUser.id;
-    const actualDateTime = new Date();
-    const dateTime = actualDateTime.toString();
+    const receiverId = selectedUser.id;
+    const timestamp = new Date();
 
     // Envío el mensaje al destinatario
-    const messageData = {
-      from: userName,
-      message,
-      to,
-      dateTime,
+    const messageData: Message = {
+      id: generarUUID(),
+      content: message,
+      receiverId,
+      timestamp,
+      senderId: selectedUser.id,
     };
-    sendMessage("send-message", messageData);
-
-    // Agrego el mensaje enviado al chat
-    handleSendMessages(message);
+    handleSendMessages(messageData);
 
     // Limpio el formulario
     if (formRef.current) {

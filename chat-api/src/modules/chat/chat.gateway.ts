@@ -1,8 +1,14 @@
 import { BadRequestException, Logger, OnModuleInit } from '@nestjs/common';
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import {
+  ConnectedSocket,
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { type Message } from './chat.input';
 import { ChatService } from './chat.service';
-import { Client } from './chat.input';
 
 @WebSocketGateway()
 export class ChatGateway implements OnModuleInit {
@@ -21,23 +27,38 @@ export class ChatGateway implements OnModuleInit {
           throw new BadRequestException('No se envio ningun nombre de usuario');
         }
 
-        const clientId = `id_${username}`;
+        const id = socket.id;
+
         this.chatService.onClientConnected({
-          id: clientId,
-          name: username,
+          id,
+          username,
         });
 
-        const clientsConnected: Client[] = this.chatService.getClients();
-        this.server.emit('on-clients-changed', clientsConnected);
+        const clientsConnected = this.chatService.getClients();
+        const clientsFiltered = clientsConnected.filter(
+          (user) => user.id !== id,
+        );
+        this.server.emit('on-clients-changed', clientsFiltered);
 
         socket.on('disconnect', () => {
-          this.logger.debug('cliente desconectado');
-          this.chatService.onClientDisconnected(clientId);
+          this.chatService.onClientDisconnected(id);
+          const clientsConnectedList = this.chatService.getClients();
+          this.server.emit('on-clients-changed', clientsConnectedList);
         });
       });
     } catch (error) {
       this.logger.error(error);
       throw error;
     }
+  }
+
+  @SubscribeMessage('send-message')
+  handleMessage(
+    @MessageBody()
+    messageData: Message,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const { receiverId } = messageData;
+    this.server.to(receiverId).emit('message-to-client', messageData);
   }
 }

@@ -61,6 +61,7 @@ module.exports = {
     new ReactRefreshPlugin(),
     new rspack.DefinePlugin({
       'import.meta.env.VITE_BACKEND_URL': JSON.stringify(process.env.VITE_BACKEND_URL),
+      'import.meta.env.VITE_WEBSOCKET_URL': JSON.stringify(process.env.VITE_WEBSOCKET_URL),
     }),
   ],
   devServer: {
