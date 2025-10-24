@@ -28,8 +28,8 @@ const ChatPage = () => {
   const { isConnected, socket, sendMessage } = useSocketIO({
     url: import.meta.env.VITE_WEBSOCKET_URL,
     username: userName || "userName",
-    onClientsChanged: handleOnClientsConnecteds,
-    onMessage: handleAddMessages,
+    onClientsChanged: (clients) => handleOnClientsConnecteds(clients),
+    onMessage: (message) => handleAddMessages(message),
   });
 
   useEffect(() => {

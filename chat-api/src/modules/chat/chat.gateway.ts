@@ -35,10 +35,7 @@ export class ChatGateway implements OnModuleInit {
         });
 
         const clientsConnected = this.chatService.getClients();
-        const clientsFiltered = clientsConnected.filter(
-          (user) => user.id !== id,
-        );
-        this.server.emit('on-clients-changed', clientsFiltered);
+        this.server.emit('on-clients-changed', clientsConnected);
 
         socket.on('disconnect', () => {
           this.chatService.onClientDisconnected(id);

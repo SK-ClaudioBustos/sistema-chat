@@ -1,11 +1,12 @@
+import { Message, UserConnected } from "@/types/tipos";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 interface UseSocketIOProps {
   url: string;
   username: string;
-  onClientsChanged?: (clients: any[]) => void;
-  onMessage?: (message: any) => void;
+  onClientsChanged: (clients: UserConnected[]) => void;
+  onMessage: (message: Message) => void;
 }
 
 export const useSocketIO = ({
@@ -35,12 +36,13 @@ export const useSocketIO = ({
       setIsConnected(false);
     });
 
-    socket.on("on-clients-changed", (clients) => {
-      onClientsChanged?.(clients);
+    socket.on("on-clients-changed", (clients: UserConnected[]) => {
+      const filteredClients = clients.filter((client) => client.id !== socket.id);
+      onClientsChanged(filteredClients);
     });
 
     socket.on("message-to-client", (message) => {
-      onMessage?.(message);
+      onMessage(message);
     });
 
     return () => {
