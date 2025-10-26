@@ -1,6 +1,7 @@
 import { useSendMessages } from "@/hooks/useSendMessage";
 import { UserConnected } from "@/types/tipos";
 import { Button, Textarea } from "flowbite-react";
+import { KeyboardEvent } from "react";
 import { HiPaperAirplane } from "react-icons/hi";
 
 interface MessageInputProps {
@@ -12,13 +13,20 @@ interface MessageInputProps {
 export const MessageInput = ({
   userData,
   selectedUser,
-  handleSendMessages
+  handleSendMessages,
 }: MessageInputProps) => {
   const { formRef, handleSubmitMessage } = useSendMessages(
     userData,
     selectedUser,
     handleSendMessages
   );
+
+  const handleOnKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      formRef.current?.requestSubmit();
+    }
+  };
 
   return (
     <div className="border-t border-gray-200 dark:border-gray-700 p-4">
@@ -32,6 +40,7 @@ export const MessageInput = ({
           rows={1}
           name="message"
           className="flex-1"
+          onKeyDownCapture={handleOnKeyDown}
         />
         <Button type="submit" className="self-end">
           <HiPaperAirplane className="h-5 w-5" />
