@@ -13,7 +13,7 @@ export const MessagesBox = ({ messages, userData }: MessageBox) => {
         <MessageItem
           msg={msg}
           key={msg.id}
-          isFromUser={userData.id === msg.receiverId}
+          isFromUser={userData.id === msg.senderId}
         />
       ))}
     </div>

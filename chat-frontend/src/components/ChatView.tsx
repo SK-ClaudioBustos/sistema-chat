@@ -26,8 +26,9 @@ const ChatView = ({
       <ChatHeader selectedUser={selectedUser} />
       <MessagesBox userData={userData} messages={messages} />
       <MessageInput
-        handleSendMessages={handleSendMessages}
+        userData={userData}
         selectedUser={selectedUser}
+        handleSendMessages={handleSendMessages}
       />
     </div>
   );

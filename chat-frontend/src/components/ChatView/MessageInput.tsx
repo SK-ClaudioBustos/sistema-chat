@@ -4,15 +4,18 @@ import { Button, Textarea } from "flowbite-react";
 import { HiPaperAirplane } from "react-icons/hi";
 
 interface MessageInputProps {
+  userData: UserConnected;
   selectedUser: UserConnected;
   handleSendMessages: (message: any) => void;
 }
 
 export const MessageInput = ({
+  userData,
   selectedUser,
   handleSendMessages
 }: MessageInputProps) => {
   const { formRef, handleSubmitMessage } = useSendMessages(
+    userData,
     selectedUser,
     handleSendMessages
   );
