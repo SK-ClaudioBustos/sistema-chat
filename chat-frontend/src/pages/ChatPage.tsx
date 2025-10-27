@@ -28,8 +28,8 @@ const ChatPage = () => {
   const { isConnected, socket, sendMessage } = useSocketIO({
     url: import.meta.env.VITE_WEBSOCKET_URL,
     username: userName || "userName",
-    onClientsChanged: (clients) => handleOnClientsConnecteds(clients),
-    onMessage: (message) => handleAddMessages(message),
+    onClientsChanged: handleOnClientsConnecteds,
+    onMessage: handleAddMessages,
   });
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const ChatPage = () => {
         onSelectUser={handleChangeSelectedChatUser}
       />
       <ChatView
-      userData={userData}
+        userData={userData}
         messages={messages}
         selectedUser={selectedUser}
         handleSendMessages={handleSendMessages}
