@@ -39,7 +39,7 @@ export const MessageInput = ({
           placeholder={`Message ${selectedUser.username}...`}
           rows={1}
           name="message"
-          className="flex-1"
+          className="flex-1 px-4 py-2 min-h-9"
           onKeyDownCapture={handleOnKeyDown}
         />
         <Button type="submit" className="self-end">
