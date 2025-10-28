@@ -1,5 +1,5 @@
 import { UserConnected } from "@/types/tipos";
-import { Avatar } from "flowbite-react";
+import { UserConnectedItem } from "./UserConnectedItem";
 
 interface UsersConnectedListProps {
   usersConnected: UserConnected[];
@@ -20,26 +20,7 @@ export const UsersConnectedList = ({
         </div>
       ) : (
         usersConnected.map((user) => (
-          <button
-            key={user.id}
-            onClick={() => onSelectUser(user)}
-            className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${
-              selectedUser && selectedUser?.id === user.id
-                ? "bg-blue-50 dark:bg-blue-900/20"
-                : "hover:bg-gray-50 dark:hover:bg-gray-700"
-            }`}
-          >
-            <Avatar
-              placeholderInitials={user?.username.charAt(0).toUpperCase()}
-              rounded
-              statusPosition="bottom-right"
-            />
-            <div className="flex-1 text-left">
-              <p className="font-medium text-gray-900 dark:text-white">
-                {user.username}
-              </p>
-            </div>
-          </button>
+          <UserConnectedItem key={user.id} user={user} selectedUser={selectedUser} onSelectUser={onSelectUser}/>
         ))
       )}
     </div>

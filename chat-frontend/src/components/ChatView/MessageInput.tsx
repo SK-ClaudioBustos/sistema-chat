@@ -2,7 +2,7 @@ import { useSendMessages } from "@/hooks/useSendMessage";
 import { UserConnected } from "@/types/tipos";
 import { Button, Textarea } from "flowbite-react";
 import { KeyboardEvent } from "react";
-import { HiPaperAirplane } from "react-icons/hi";
+import { HiPaperAirplane } from "react-icons/hi2";
 
 interface MessageInputProps {
   userData: UserConnected;
