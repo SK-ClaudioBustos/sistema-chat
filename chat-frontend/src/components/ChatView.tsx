@@ -20,7 +20,7 @@ const ChatView = ({
   if (!selectedUser) {
     return <NoChatSelected />;
   }
-  const filteredMessages = messages.filter(msg => msg.senderId === selectedUser.id);
+  const filteredMessages = messages.filter(msg => msg.senderId === selectedUser.id || msg.senderId === userData.id);
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-gray-800">
       <ChatHeader selectedUser={selectedUser} />

@@ -15,22 +15,25 @@ export const useSendMessages = (
     // Obtengo el mensaje del formulario
     const formData = new FormData(e.currentTarget);
     const message = formData.get("message") as string;
-    const receiverId = selectedUser.id;
-    const timestamp = new Date();
 
-    // Envío el mensaje al destinatario
-    const messageData: Message = {
-      id: generarUUID(),
-      content: message,
-      senderId: userData.id,
-      receiverId,
-      timestamp,
-    };
-    handleSendMessages(messageData);
+    if (message) {
+      const receiverId = selectedUser.id;
+      const timestamp = new Date();
 
-    // Limpio el formulario
-    if (formRef.current) {
-      formRef.current.reset();
+      // Envío el mensaje al destinatario
+      const messageData: Message = {
+        id: generarUUID(),
+        content: message,
+        senderId: userData.id,
+        receiverId,
+        timestamp,
+      };
+      handleSendMessages(messageData);
+
+      // Limpio el formulario
+      if (formRef.current) {
+        formRef.current.reset();
+      }
     }
   };
 
