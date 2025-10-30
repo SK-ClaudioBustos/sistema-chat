@@ -1,5 +1,5 @@
-import ChatLayout from "@/components/ChatLayout";
-import ChatView from "@/components/ChatView";
+import ChatLayout from "@/components/ChatPage/ChatLayout";
+import ChatView from "@/components/ChatPage/ChatView";
 import { useSocketIO } from "@/hooks/useSocketIO";
 import { Message, UserConnected } from "@/types/tipos";
 import { useState } from "react";
