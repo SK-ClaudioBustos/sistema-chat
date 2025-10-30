@@ -41,7 +41,7 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="h-screen flex bg-gray-50 dark:bg-gray-900">
+    <div className="h-screen flex bg-gray-900">
       <ChatLayout
         usersConnected={clientsConnected}
         userName={userName}

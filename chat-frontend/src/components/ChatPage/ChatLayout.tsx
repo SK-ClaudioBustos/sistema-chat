@@ -20,7 +20,7 @@ const ChatLayout: FC<ChatLayoutProps> = ({
   onSelectUser,
 }) => {
   return (
-    <div className="w-80 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col h-full">
+    <div className="w-80 border-r border-gray-700 bg-gray-800 flex flex-col h-full">
       <div className="flex-1 overflow-y-auto">
         <CurrentUserHeader isConnected={isConnected} userName={userName} />
         <UsersListConnected usersConnected={usersConnected} />
