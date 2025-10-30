@@ -2,7 +2,7 @@ import ChatLayout from "@/components/ChatLayout";
 import ChatView from "@/components/ChatView";
 import { useSocketIO } from "@/hooks/useSocketIO";
 import { Message, UserConnected } from "@/types/tipos";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 const ChatPage = () => {
@@ -10,7 +10,7 @@ const ChatPage = () => {
   const [clientsConnected, setClientsConnected] = useState<UserConnected[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserConnected | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [userData, setUserData] = useState<UserConnected | null>();
+
   const handleChangeSelectedChatUser = (userChatSelected: UserConnected) => {
     setSelectedUser(userChatSelected);
   };
@@ -25,26 +25,17 @@ const ChatPage = () => {
     sendMessage(message);
   };
 
-  const { isConnected, socket, sendMessage } = useSocketIO({
+  const { isConnected, socket, userData, sendMessage } = useSocketIO({
     url: import.meta.env.VITE_WEBSOCKET_URL,
     username: userName || "userName",
     onClientsChanged: handleOnClientsConnecteds,
     onMessage: handleAddMessages,
   });
 
-  useEffect(() => {
-    if (userName && socket?.id) {
-      setUserData({
-        id: socket.id,
-        username: userName,
-      });
-    }
-  }, [userName, socket]);
-
   if (!userName || !socket || !userData) {
     return (
       <div>
-        <span>ERROR NO SE TIENE USUARIO</span>
+        <span>Cargando Datos del usuario</span>
       </div>
     );
   }

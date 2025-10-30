@@ -16,6 +16,7 @@ export const useSocketIO = ({
   onMessage,
 }: UseSocketIOProps) => {
   const [isConnected, setIsConnected] = useState(false);
+  const [userData, setUserData] = useState<UserConnected | null>(null);
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -37,7 +38,9 @@ export const useSocketIO = ({
     });
 
     socket.on("on-clients-changed", (clients: UserConnected[]) => {
-      const filteredClients = clients.filter((client) => client.id !== socket.id);
+      const filteredClients = clients.filter(
+        (client) => client.id !== socket.id
+      );
       onClientsChanged(filteredClients);
     });
 
@@ -50,6 +53,15 @@ export const useSocketIO = ({
     };
   }, [url, username, onClientsChanged, onMessage]);
 
+  useEffect(() => {
+    if (username && socketRef.current?.id) {
+      setUserData({
+        id: socketRef.current.id,
+        username: username,
+      });
+    }
+  }, [username, socketRef.current]);
+
   const sendMessage = (message: any) => {
     if (socketRef.current?.connected) {
       socketRef.current.emit("send-message", message);
@@ -58,7 +70,8 @@ export const useSocketIO = ({
 
   return {
     isConnected,
-    sendMessage,
     socket: socketRef.current,
+    userData,
+    sendMessage,
   };
 };
