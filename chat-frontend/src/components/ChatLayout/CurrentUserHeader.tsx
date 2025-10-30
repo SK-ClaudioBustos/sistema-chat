@@ -15,7 +15,7 @@ export const CurrentUserHeader = ({
   const handleLogout = () => {
     navigate("/");
   };
-  const connectionStatusLabel = isConnected ? "Online" : "Offline";
+  const connectionStatusLabel = isConnected ? "En línea" : "Desconectado";
   return (
     <div className="p-4 border-b border-gray-200 dark:border-gray-700">
       <div className="flex items-center gap-3">

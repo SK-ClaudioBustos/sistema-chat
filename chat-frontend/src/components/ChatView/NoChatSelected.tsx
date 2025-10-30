@@ -18,10 +18,10 @@ export const NoChatSelected = () => {
           </svg>
         </div>
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-          Select a conversation
+          Ningún chat seleccionado
         </h3>
         <p className="text-gray-500 dark:text-gray-400">
-          Choose a user from the list to start chatting
+            Seleccione un usuario para empezar a chatear
         </p>
       </div>
     </div>

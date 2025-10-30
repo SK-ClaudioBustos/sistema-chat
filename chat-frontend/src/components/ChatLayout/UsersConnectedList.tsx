@@ -16,7 +16,7 @@ export const UsersConnectedList = ({
     <div className="space-y-1 px-2">
       {usersConnected.length === 0 ? (
         <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-          No users online
+          Ningún usuario conectado
         </div>
       ) : (
         usersConnected.map((user) => (

@@ -36,7 +36,7 @@ export const MessageInput = ({
         className="flex gap-2"
       >
         <Textarea
-          placeholder={`Message ${selectedUser.username}...`}
+          placeholder={`Enviar mensaje a ${selectedUser.username}...`}
           rows={1}
           name="message"
           className="flex-1 px-4 py-2 min-h-9"
