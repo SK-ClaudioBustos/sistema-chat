@@ -33,6 +33,7 @@ export const UsernameInput = ({
         </Label>
       </div>
       <TextInput
+        style={{ padding: "0.5rem"}}
         id="userName"
         type="text"
         placeholder="John Doe"
