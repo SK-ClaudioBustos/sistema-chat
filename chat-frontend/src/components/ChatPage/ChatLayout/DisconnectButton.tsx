@@ -9,7 +9,7 @@ export const DisconnectButton = () => {
   return (
     <button
       onClick={handleLogout}
-      className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+      className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer"
       title="Logout"
     >
       <HiLogout className="w-5 h-5" />

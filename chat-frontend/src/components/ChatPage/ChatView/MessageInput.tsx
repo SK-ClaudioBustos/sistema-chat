@@ -42,8 +42,8 @@ export const MessageInput = ({
           className="flex-1 px-4 py-2 min-h-9"
           onKeyDownCapture={handleOnKeyDown}
         />
-        <Button type="submit" className="self-end">
-          <HiPaperAirplane className="h-5 w-5" />
+        <Button type="submit" className="self-end bg-gray-600 rounded-full size-9 hover:bg-gray-700 cursor-pointer">
+          <HiPaperAirplane className="size-6" />
         </Button>
       </form>
     </div>
