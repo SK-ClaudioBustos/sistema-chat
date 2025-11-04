@@ -1,4 +1,4 @@
-import { Avatar } from "flowbite-react";
+import { UserAvatar } from "@/components/common/UserAvatar";
 import { DisconnectButton } from "./DisconnectButton";
 
 interface CurrentUserHeaderProps {
@@ -14,7 +14,7 @@ export const CurrentUserHeader = ({
   return (
     <div className="p-4 border-b border-gray-200 dark:border-gray-700">
       <div className="flex items-center gap-3">
-        <Avatar className="bg-gray-700" />
+        <UserAvatar username={userName} />
         <div className="flex-1">
           <p className="font-semibold text-gray-900 dark:text-white">
             {userName}

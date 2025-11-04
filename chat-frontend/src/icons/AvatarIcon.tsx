@@ -12,7 +12,7 @@ export const AvatarIcon = ({ containerStyle, SVGprops }: Props) => {
       style={{backgroundColor: containerStyle}}
     >
       <svg
-        className="absolute -bottom-1 h-auto w-auto text-gray-400"
+        className="absolute h-auto w-auto text-gray-400"
         fill="currentColor"
         viewBox="0 0 20 20"
         xmlns="http://www.w3.org/2000/svg"
