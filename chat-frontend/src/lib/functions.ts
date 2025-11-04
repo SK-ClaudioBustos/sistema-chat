@@ -7,41 +7,38 @@ export const validateUsername = (name: string): boolean => {
   return regex.test(name);
 };
 
-/**
- * Genera una clase de color de Tailwind basada en un string
- * @param {string} str - String base para generar el color
- * @returns {string} - Clase de Tailwind (ej: "bg-blue-500")
- */
-export function generateTailwindColor(str: string) {
-  // Colores disponibles en Tailwind
+export function generateColorFromUsername(username: string): string {
   const colors = [
-    'slate', 'gray', 'zinc', 'neutral', 'stone',
-    'red', 'orange', 'amber', 'yellow', 'lime',
-    'green', 'emerald', 'teal', 'cyan', 'sky',
-    'blue', 'indigo', 'violet', 'purple', 'fuchsia',
-    'pink', 'rose'
+    '#8b5cf6', // violet
+    '#3b82f6', // blue
+    '#10b981', // emerald
+    '#f59e0b', // amber
+    '#ef4444', // red
+    '#ec4899', // pink
+    '#06b6d4', // cyan
+    '#84cc16', // lime
+    '#f97316', // orange
+    '#a855f7', // purple
+    '#14b8a6', // teal
+    '#eab308', // yellow
+    '#6366f1', // indigo
+    '#22c55e', // green
+    '#f43f5e', // rose
+    '#0ea5e9', // sky
+    '#d946ef', // fuchsia
+    '#64748b', // slate
+    '#fb923c', // orange-400
+    '#2dd4bf', // teal-400
+    '#facc15', // yellow-400
+    '#4ade80', // green-400
+    '#fb7185', // rose-400
+    '#c084fc', // purple-400
+    '#38bdf8', // sky-400
   ];
   
-  // Intensidades disponibles en Tailwind
-  const shades = [400, 500, 600, 700, 800, 900];
+  const hash = username.split('').reduce((acc, char) => 
+    char.codePointAt(0)! + ((acc << 5) - acc), 0
+  );
   
-  // Generar hash simple del string
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.codePointAt(i);
-    hash = ((hash << 5) - hash) + char!;
-    hash = hash & hash; // Convertir a entero de 32 bits
-  }
-  
-  // Hacer el hash positivo
-  hash = Math.abs(hash);
-  
-  // Seleccionar color e intensidad basados en el hash
-  const colorIndex = hash % colors.length;
-  const shadeIndex = Math.floor(hash / colors.length) % shades.length;
-  
-  const selectedColor = colors[colorIndex];
-  const selectedShade = shades[shadeIndex];
-  
-  return `bg-${selectedColor}-${selectedShade}`;
+  return colors[Math.abs(hash) % colors.length];
 }

@@ -1,6 +1,5 @@
-import { generateTailwindColor } from "@/lib/functions";
+import { UserAvatar } from "@/components/common/UserAvatar";
 import { UserConnected } from "@/types/tipos";
-import { Avatar } from "flowbite-react";
 
 interface UserConnectedItemProps {
   user: UserConnected;
@@ -13,7 +12,6 @@ export const UserConnectedItem = ({
   user,
   onSelectUser,
 }: UserConnectedItemProps) => {
-  const bgColorClass = generateTailwindColor(user.username);
   return (
     <button
       onClick={() => onSelectUser(user)}
@@ -23,7 +21,7 @@ export const UserConnectedItem = ({
           : "hover:bg-gray-50 dark:hover:bg-gray-700"
       }`}
     >
-      <Avatar className={bgColorClass} />
+      <UserAvatar username={user.username}/>
       <div className="flex-1 text-left">
         <p className="font-medium text-gray-900 dark:text-white">
           {user.username}
