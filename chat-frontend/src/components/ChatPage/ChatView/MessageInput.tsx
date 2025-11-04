@@ -29,23 +29,26 @@ export const MessageInput = ({
   };
 
   return (
-    <div className="border-t border-gray-200 dark:border-gray-700 p-4">
-      <form
-        ref={formRef}
-        onSubmit={(e) => handleSubmitMessage(e)}
-        className="flex gap-2"
-      >
+    <form
+      ref={formRef}
+      onSubmit={(e) => handleSubmitMessage(e)}
+      className="border-t border-gray-700 p-4"
+    >
+      <div className="flex gap-2">
         <Textarea
           placeholder={`Enviar mensaje a ${selectedUser.username}...`}
           rows={1}
           name="message"
-          className="flex-1 px-4 py-2 min-h-9"
+          className="flex-1 px-4 py-2 min-h-9 bg-gray-700"
           onKeyDownCapture={handleOnKeyDown}
         />
-        <Button type="submit" className="self-end bg-gray-600 rounded-full size-9 hover:bg-gray-700 cursor-pointer">
+        <Button
+          type="submit"
+          className="self-end bg-gray-600 rounded-full size-9 hover:bg-gray-700 cursor-pointer"
+        >
           <HiPaperAirplane className="size-6" />
         </Button>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
