@@ -33,7 +33,6 @@ export const UsernameInput = ({
         </Label>
       </div>
       <TextInput
-        style={{ padding: "0.5rem"}}
         id="userName"
         type="text"
         placeholder="John Doe"
@@ -44,6 +43,7 @@ export const UsernameInput = ({
         color={error ? "failure" : undefined}
         aria-invalid={!!error}
         aria-describedby={error ? "username-error" : undefined}
+        style={{ padding: "0.5rem", backgroundColor: "#1c2123"}}
       />
       {error && (
         <p
