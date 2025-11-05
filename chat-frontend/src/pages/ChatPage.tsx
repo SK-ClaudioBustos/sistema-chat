@@ -1,5 +1,6 @@
 import ChatLayout from "@/components/ChatPage/ChatLayout";
 import ChatView from "@/components/ChatPage/ChatView";
+import { LoadingChat } from "@/components/ChatPage/LoadingChat";
 import { useSocketIO } from "@/hooks/useSocketIO";
 import { Message, UserConnected } from "@/types/tipos";
 import { useState } from "react";
@@ -33,11 +34,7 @@ const ChatPage = () => {
   });
 
   if (!userName || !socket || !userData) {
-    return (
-      <div>
-        <span>Cargando Datos del usuario</span>
-      </div>
-    );
+    return <LoadingChat />;
   }
 
   return (
