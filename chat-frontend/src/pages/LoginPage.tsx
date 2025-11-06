@@ -30,8 +30,8 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <Card className="px-8 shadow-2xl backdrop-blur-sm">
+    <div className="min-h-screen flex items-center justify-center md:bg-gradient-to-br md:from-gray-900 md:via-gray-800 md:to-gray-900 bg-gray-800">
+      <Card className="px-8 md:shadow-2xl md:backdrop-blur-sm">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-3 py-4"
