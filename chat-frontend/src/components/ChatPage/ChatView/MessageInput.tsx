@@ -1,23 +1,15 @@
+import { useChatContext } from "@/context/ChatContext";
 import { useSendMessages } from "@/hooks/useSendMessage";
-import { UserConnected } from "@/types/tipos";
 import { Button, Textarea } from "flowbite-react";
 import { KeyboardEvent } from "react";
 import { HiPaperAirplane } from "react-icons/hi2";
 
-interface MessageInputProps {
-  userData: UserConnected;
-  selectedUser: UserConnected;
-  handleSendMessages: (message: any) => void;
-}
+export const MessageInput = () => {
+  const { userData, selectedUser, handleSendMessages } = useChatContext();
 
-export const MessageInput = ({
-  userData,
-  selectedUser,
-  handleSendMessages,
-}: MessageInputProps) => {
   const { formRef, handleSubmitMessage } = useSendMessages(
     userData,
-    selectedUser,
+    selectedUser!,
     handleSendMessages
   );
 
@@ -36,7 +28,7 @@ export const MessageInput = ({
     >
       <div className="flex gap-2">
         <Textarea
-          placeholder={`Enviar mensaje a ${selectedUser.username}...`}
+          placeholder={`Enviar mensaje a ${selectedUser?.username}...`}
           rows={1}
           name="message"
           className="flex-1 px-4 py-2 min-h-9 bg-gray-700"
