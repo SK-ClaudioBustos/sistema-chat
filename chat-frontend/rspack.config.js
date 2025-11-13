@@ -58,6 +58,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./index.html",
+      favicon: "./public/favicon.ico", // ✅ Agregar esta línea
     }),
     new ReactRefreshPlugin(),
     new rspack.DefinePlugin({
@@ -66,9 +67,15 @@ module.exports = {
     }),
   ],
   devServer: {
-    static: {
-      directory: require("path").resolve(__dirname, "dist"),
-    },
+    static: [
+      {
+        directory: path.resolve(__dirname, "dist"),
+      },
+      {
+        directory: path.resolve(__dirname, "public"),
+        publicPath: "/",
+      },
+    ],
     hot: true,
     port: process.env.PORT || 4000,
     open: true,
