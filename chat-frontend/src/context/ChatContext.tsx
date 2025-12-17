@@ -9,7 +9,6 @@ import {
     useState,
 } from "react";
 
-// Definición de tipos
 interface ChatContextValue {
   username: string;
   clientsConnected: UserConnected[];
@@ -18,7 +17,7 @@ interface ChatContextValue {
   isConnected: boolean;
   socket: any;
   userData: any;
-  handleChangeSelectedChatUser: (userChatSelected: UserConnected) => void;
+  handleChangeSelectedChatUser: (userChatSelected: UserConnected | null) => void;
   handleSendMessages: (message: Message) => void;
 }
 
@@ -26,7 +25,6 @@ interface ChatProviderProps extends PropsWithChildren {
   username: string;
 }
 
-// Creación del contexto
 const ChatContext = createContext<ChatContextValue | undefined>(undefined);
 
 export const ChatProvider = ({ username, children }: ChatProviderProps) => {
@@ -34,10 +32,9 @@ export const ChatProvider = ({ username, children }: ChatProviderProps) => {
   const [selectedUser, setSelectedUser] = useState<UserConnected | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  // ✅ Memoizar con useCallback
-  const handleChangeSelectedChatUser = useCallback((userChatSelected: UserConnected) => {
+  const handleChangeSelectedChatUser = useCallback((userChatSelected: UserConnected | null) => {
     setSelectedUser(userChatSelected);
-  }, []); // Sin dependencias porque solo usa setState
+  }, []);
 
   const handleOnClientsConnecteds = useCallback((clients: UserConnected[]) => {
     setClientsConnected(clients);
@@ -47,7 +44,6 @@ export const ChatProvider = ({ username, children }: ChatProviderProps) => {
     setMessages((prevState) => [...prevState, message]);
   }, []);
 
-  // ⚠️ Esta función depende de sendMessage del hook
   const { isConnected, socket, userData, sendMessage } = useSocketIO({
     url: import.meta.env.VITE_WEBSOCKET_URL,
     username: username || "userName",
@@ -55,11 +51,10 @@ export const ChatProvider = ({ username, children }: ChatProviderProps) => {
     onMessage: handleAddMessages,
   });
 
-  // ✅ Ahora memoizamos handleSendMessages con sendMessage como dependencia
   const handleSendMessages = useCallback((message: Message) => {
     setMessages((prevState) => [...prevState, message]);
     sendMessage(message);
-  }, [sendMessage]); // Depende de sendMessage
+  }, [sendMessage]);
 
   const value: ChatContextValue = useMemo(
     () => ({
@@ -81,7 +76,7 @@ export const ChatProvider = ({ username, children }: ChatProviderProps) => {
       isConnected,
       socket,
       userData,
-      handleChangeSelectedChatUser, // ✅ Ahora sí incluir las funciones
+      handleChangeSelectedChatUser,
       handleSendMessages,
     ]
   );
@@ -89,7 +84,6 @@ export const ChatProvider = ({ username, children }: ChatProviderProps) => {
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };
 
-// Hook personalizado para consumir el contexto
 export const useChatContext = (): ChatContextValue => {
   const context = useContext(ChatContext);
 
