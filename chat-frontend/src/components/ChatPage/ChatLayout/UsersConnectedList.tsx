@@ -12,10 +12,7 @@ export const UsersConnectedList = () => {
         </div>
       ) : (
         clientsConnected.map((user) => (
-          <UserConnectedItem
-            key={user.id}
-            user={user}
-          />
+          <UserConnectedItem key={user.id} user={user} />
         ))
       )}
     </div>

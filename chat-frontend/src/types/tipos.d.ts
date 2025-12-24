@@ -9,4 +9,5 @@ export interface Message {
   receiverId: string;
   content: string;
   timestamp: Date;
+  isRead: boolean;
 }
