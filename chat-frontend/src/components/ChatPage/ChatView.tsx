@@ -5,8 +5,9 @@ import { MessagesBox } from "./ChatView/MessagesBox";
 import { NoChatSelected } from "./ChatView/NoChatSelected";
 
 const ChatView = () => {
-  const { selectedUser } = useChatContext();
-  if (!selectedUser) {
+  const { selectedUser, clientsConnected } = useChatContext();
+  const isUserSelectedConnected = clientsConnected.find((user) => user.id === selectedUser?.id);
+  if (!selectedUser || isUserSelectedConnected === undefined) {
     return <NoChatSelected />;
   }
   return (

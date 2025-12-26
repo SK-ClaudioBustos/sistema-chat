@@ -1,65 +1,105 @@
 import { useSocketIO } from "@/hooks/useSocketIO";
 import { Message, UserConnected } from "@/types/tipos";
 import {
-    createContext,
-    PropsWithChildren,
-    useCallback,
-    useContext,
-    useMemo,
-    useState,
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
 } from "react";
+import { Socket } from "socket.io-client";
 
-// Definición de tipos
 interface ChatContextValue {
   username: string;
   clientsConnected: UserConnected[];
   selectedUser: UserConnected | null;
-  messages: Message[];
+  messages: Map<string, Message[]>;
   isConnected: boolean;
-  socket: any;
-  userData: any;
-  handleChangeSelectedChatUser: (userChatSelected: UserConnected) => void;
+  socket: Socket | null;
+  userData: UserConnected | null;
+  messageCount: number;
+  handleChangeSelectedChatUser: (
+    userChatSelected: UserConnected | null
+  ) => void;
   handleSendMessages: (message: Message) => void;
+  markMessagesAsRead: (userId: string) => void;
 }
 
 interface ChatProviderProps extends PropsWithChildren {
   username: string;
 }
 
-// Creación del contexto
 const ChatContext = createContext<ChatContextValue | undefined>(undefined);
 
 export const ChatProvider = ({ username, children }: ChatProviderProps) => {
   const [clientsConnected, setClientsConnected] = useState<UserConnected[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserConnected | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messageCount, setMessageCount] = useState<number>(0);
+  const [messages, setMessages] = useState<Map<string, Message[]>>(
+    new Map<string, Message[]>()
+  );
 
-  // ✅ Memoizar con useCallback
-  const handleChangeSelectedChatUser = useCallback((userChatSelected: UserConnected) => {
-    setSelectedUser(userChatSelected);
-  }, []); // Sin dependencias porque solo usa setState
+  const handleChangeSelectedChatUser = useCallback(
+    (userChatSelected: UserConnected | null) => {
+      setSelectedUser(userChatSelected);
+    },
+    []
+  );
 
   const handleOnClientsConnecteds = useCallback((clients: UserConnected[]) => {
     setClientsConnected(clients);
   }, []);
 
-  const handleAddMessages = useCallback((message: Message) => {
-    setMessages((prevState) => [...prevState, message]);
-  }, []);
+  const handleAddMessages = useCallback(
+    (message: Message, fromLocalUser = false) => {
+      try {
+        setMessages((prevState) => {
+          const newMap = new Map<string, Message[]>(prevState);
+          const chatKey = fromLocalUser ? message.receiverId : message.senderId;
+          const isRead = fromLocalUser;
+          const currentMessages = newMap.get(chatKey) || [];
+          newMap.set(chatKey, [...currentMessages, { ...message, isRead }]);
+          return newMap;
+        });
+        setMessageCount(prevState => prevState + 1);
+      } catch (error) {
+        console.error("Error al añadir un mensaje ", error);
+      }
+    },
+    []
+  );
 
-  // ⚠️ Esta función depende de sendMessage del hook
   const { isConnected, socket, userData, sendMessage } = useSocketIO({
     url: import.meta.env.VITE_WEBSOCKET_URL,
-    username: username || "userName",
+    username: username,
     onClientsChanged: handleOnClientsConnecteds,
     onMessage: handleAddMessages,
   });
 
-  // ✅ Ahora memoizamos handleSendMessages con sendMessage como dependencia
-  const handleSendMessages = useCallback((message: Message) => {
-    setMessages((prevState) => [...prevState, message]);
-    sendMessage(message);
-  }, [sendMessage]); // Depende de sendMessage
+  const handleSendMessages = useCallback(
+    (message: Message) => {
+      try {
+        handleAddMessages(message, true);
+        sendMessage(message);
+      } catch (error) {
+        console.error("Error al enviar el mensaje:", error);
+      }
+    },
+    [sendMessage, handleAddMessages]
+  );
+
+  const markMessagesAsRead = useCallback((userId: string) => {
+    setMessages((prevMessages) => {
+      const updatedMessages = new Map(prevMessages);
+      const userMessages = updatedMessages.get(userId) || [];
+      updatedMessages.set(
+        userId,
+        userMessages.map((msg) => ({ ...msg, isRead: true }))
+      );
+      return updatedMessages;
+    });
+  }, []);
 
   const value: ChatContextValue = useMemo(
     () => ({
@@ -70,8 +110,10 @@ export const ChatProvider = ({ username, children }: ChatProviderProps) => {
       isConnected,
       socket,
       userData,
+      messageCount,
       handleChangeSelectedChatUser,
       handleSendMessages,
+      markMessagesAsRead
     }),
     [
       username,
@@ -81,15 +123,16 @@ export const ChatProvider = ({ username, children }: ChatProviderProps) => {
       isConnected,
       socket,
       userData,
-      handleChangeSelectedChatUser, // ✅ Ahora sí incluir las funciones
+      messageCount,
+      handleChangeSelectedChatUser,
       handleSendMessages,
+      markMessagesAsRead,
     ]
   );
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };
 
-// Hook personalizado para consumir el contexto
 export const useChatContext = (): ChatContextValue => {
   const context = useContext(ChatContext);
 

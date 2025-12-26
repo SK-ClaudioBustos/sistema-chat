@@ -3,9 +3,7 @@ import { MessageItem } from "./MessageItem";
 
 export const MessagesBox = () => {
   const { messages, selectedUser, userData } = useChatContext();
-  const filteredMessages = messages.filter(
-    (msg) => msg.senderId === selectedUser?.id || msg.senderId === userData.id
-  );
+  const userSelectedMessages = messages.get(`${selectedUser?.id}`) || [];
   return (
     <div
       className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900"
@@ -15,7 +13,7 @@ export const MessagesBox = () => {
         backgroundSize: "25px 25px",
       }}
     >
-      {filteredMessages.map((msg) => (
+      {userSelectedMessages.map((msg) => (
         <MessageItem
           msg={msg}
           key={msg.id}

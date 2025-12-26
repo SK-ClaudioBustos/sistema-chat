@@ -3,7 +3,7 @@ import { Message, UserConnected } from "@/types/tipos";
 import { FormEvent, useRef } from "react";
 
 export const useSendMessages = (
-  userData: UserConnected,
+  userData: UserConnected | null,
   selectedUser: UserConnected,
   handleSendMessages: (messageData: Message) => void
 ) => {
@@ -24,9 +24,10 @@ export const useSendMessages = (
       const messageData: Message = {
         id: generarUUID(),
         content: message,
-        senderId: userData.id,
+        senderId: userData?.id!,
         receiverId,
         timestamp,
+        isRead: false
       };
       handleSendMessages(messageData);
 
